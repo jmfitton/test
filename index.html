@@ -308,25 +308,25 @@
         }
 
         function sendChecklistByEmail() {
-          const checklistData = [];
-          checklistItems.forEach((section, sectionIndex) => {
-            section.items.forEach((_, itemIndex) => {
-              const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
-              const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
-              checklistData.push({
-                checked: checkbox.checked,
-                comment: commentInput.value,
-                section: section.title, // Include section title
-                item: section.items[itemIndex],
-              });
+            const checklistData = [];
+            checklistItems.forEach((section, sectionIndex) => {
+                section.items.forEach((_, itemIndex) => {
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
+                    checklistData.push({
+                        checked: checkbox.checked,
+                        comment: commentInput.value,
+                        section: section.title, // Include section title
+                        item: section.items[itemIndex],
+                    });
+                });
             });
-          });
-          const date = dateInput.value;
-          const utilityName = utilityNameInput.value;
+            const date = dateInput.value;
+            const utilityName = utilityNameInput.value;
 
-          const subject = "Shift Checklist";
+            const subject = "Shift Checklist";
 
-          let emailBody = `
+            let emailBody = `
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -347,23 +347,32 @@
                         <label style="display: block; font-size: 16px; font-weight: 500; color: #7f8c8d; margin-bottom: 5px;">Utility Name:</label>
                         <div style="">${utilityName}</div>
                     </div>
+                    <table style="width: 100%; border-collapse: collapse;">
             `;
 
           checklistData.forEach(item => {
             emailBody += `
-                        <div style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ecf0f1;">
-                            <h2 style="font-size: 18px; color: #34495e; margin-bottom: 10px; text-align: left;">${item.section}</h2>
-                            <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #ecf0f1;">
-                                <input type="checkbox" style="margin-right: 10px; width: 20px; height: 20px;" ${item.checked ? 'checked' : ''}>
-                                <span style="font-size: 16px; color: #2c3e50; margin-right: 10px;">${item.item}</span>
-                                <p style="font-size: 14px; color: #333; margin-top: 5px;">Comments: ${item.comment}</p>
-                            </div>
-                        </div>
+                        <tr style="border-bottom: 1px solid #ecf0f1;">
+                            <td style="padding: 10px 0; font-size: 16px; color: #34495e; font-weight: bold;">${item.section}</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ecf0f1;">
+                            <td style="padding: 10px 0;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr style="border-bottom: 1px solid #ecf0f1;">
+                                        <td style="padding: 8px 0; width: 20px; height: 20px;">
+                                            <input type="checkbox" style="margin-right: 10px; width: 20px; height: 20px;" ${item.checked ? 'checked' : ''}>
+                                        </td>
+                                        <td style="padding: 8px 0; font-size: 16px; color: #2c3e50;">${item.item}</td>
+                                        <td style="padding: 8px 0; font-size: 14px; color: #333;">${item.comment}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                 `;
           });
 
           emailBody += `
-                    </div>
+                    </table>
                   </div>
                 </body>
                 </html>
