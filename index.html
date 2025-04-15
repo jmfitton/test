@@ -34,7 +34,14 @@
         color: #34495e;
         margin-bottom: 15px;
         text-align: center;
+        cursor: pointer; /* Add cursor style to indicate interactivity */
+        display: flex; /* Use flexbox for alignment */
+        align-items: center; /* Vertically center the title and the icon */
       }
+      h2.expanded::after {
+        content: '-'; /* Change to minus when expanded */
+      }
+
       .form-field {
         margin-bottom: 15px;
       }
@@ -76,6 +83,15 @@
         border-radius: 5px;
         border: 1px solid #bdc3c7;
         font-size: 14px;
+      }
+      .hidden {
+        display: none;
+      }
+      .checklist-items-container {
+        display: none; /* Initially hidden */
+      }
+      .checklist-items-container.expanded {
+        display: block; /* Show when expanded */
       }
     </style>
 </head>
@@ -255,9 +271,17 @@
 
                 const sectionTitle = document.createElement('h2');
                 sectionTitle.textContent = section.title;
-                sectionTitle.style.cssText = 'font-size: 18px; color: #34495e; margin-bottom: 10px; text-align: left;';
+                sectionTitle.classList.add('collapsible-title'); // Add the collapsible-title class
+                sectionTitle.style.cssText = 'font-size: 18px; color: #34495e; margin-bottom: 10px; text-align: left; cursor: pointer; display: flex; align-items: center;'; // Removed justify-content
+                sectionTitle.addEventListener('click', toggleSection); // Add click event listener
+
 
                 sectionDiv.appendChild(sectionTitle);
+
+                const itemsContainer = document.createElement('div');
+                itemsContainer.className = 'checklist-items-container';
+                itemsContainer.classList.add('hidden'); // Initially hide the items
+                itemsContainer.id = `section-items-${sectionIndex}`; // Unique ID for each item container
 
                 const table = document.createElement('table');
                 table.style.cssText = 'width: 100%; border-collapse: collapse;';
@@ -301,7 +325,8 @@
                     table.appendChild(row);
                 });
 
-                sectionDiv.appendChild(table);
+                itemsContainer.appendChild(table);
+                sectionDiv.appendChild(itemsContainer);
                 checklistContainer.appendChild(sectionDiv);
             });
             loadSavedChecklist(); // Load saved state after generating
@@ -310,6 +335,7 @@
         function sendChecklistByEmail() {
             const checklistData = [];
             checklistItems.forEach((section, sectionIndex) => {
+                const isExpanded = !document.getElementById(`section-items-${sectionIndex}`).classList.contains('hidden');
                 section.items.forEach((_, itemIndex) => {
                     const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
                     const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
@@ -318,6 +344,7 @@
                         comment: commentInput.value,
                         section: section.title, // Include section title
                         item: section.items[itemIndex],
+                        expanded: isExpanded, //track expanded state
                     });
                 });
             });
@@ -329,7 +356,7 @@
             let emailBody = `Machine Utility Shift Checklist\n\nDate: ${date}\nUtility Name: ${utilityName}\n\n`;
 
             checklistData.forEach(item => {
-                emailBody += `${item.section}\n`;
+                emailBody += `${item.section} ${item.expanded ? '(Expanded)' : '(Collapsed)'}\n`;
                 emailBody += `${item.checked ? "[x]" : "[ ]"} ${item.item} - Comments: ${item.comment}\n`;
             });
 
@@ -348,6 +375,25 @@
                 checklistData.forEach((item, index) => {
                     const checkbox = document.getElementById(`item-${item.sectionIndex}-${item.itemIndex}`);
                     const commentInput = document.getElementById(`comment-${item.sectionIndex}-${item.itemIndex}`);
+                    const sectionItems = document.getElementById(`section-items-${item.sectionIndex}`);
+                    if(sectionItems){
+                         if (item.expanded) {
+                            sectionItems.classList.remove('hidden');
+                            sectionItems.classList.add('expanded');
+                            const sectionTitle = sectionItems.previousElementSibling;
+                            if(sectionTitle){
+                                sectionTitle.classList.add('expanded');
+                            }
+                        } else {
+                            sectionItems.classList.add('hidden');
+                            sectionItems.classList.remove('expanded');
+                             const sectionTitle = sectionItems.previousElementSibling;
+                             if(sectionTitle){
+                                 sectionTitle.classList.remove('expanded');
+                             }
+                        }
+                    }
+
                     if (checkbox) {
                         checkbox.checked = item.checked;
                     }
@@ -366,9 +412,19 @@
 
         function resetChecklist() {
             checklistItems.forEach((section, sectionIndex) => {
+                const sectionItems = document.getElementById(`section-items-${sectionIndex}`);
+                if (sectionItems) {
+                    sectionItems.classList.add('hidden');
+                    sectionItems.classList.remove('expanded');
+                    const sectionTitle = sectionItems.previousElementSibling;
+                     if(sectionTitle){
+                         sectionTitle.classList.remove('expanded');
+                     }
+                }
+
                 section.items.forEach((_, itemIndex) => {
-                    const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
-                    const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
                     if (checkbox) {
                         checkbox.checked = false;
                     }
@@ -385,8 +441,56 @@
             alert('Checklist reset!');
         }
 
-        emailButton.addEventListener('click', sendChecklistByEmail);
-        resetButton.addEventListener('click', resetChecklist);
+        function toggleSection(event) {
+            const sectionTitle = event.target;
+            const sectionItems = sectionTitle.nextElementSibling;
+
+            if (sectionItems.classList.contains('hidden')) {
+                sectionItems.classList.remove('hidden');
+                sectionItems.classList.add('expanded');
+                sectionTitle.classList.add('expanded'); // Add 'expanded' class to the title
+            } else {
+                sectionItems.classList.add('hidden');
+                sectionItems.classList.remove('expanded');
+                sectionTitle.classList.remove('expanded');
+            }
+            saveChecklistState();
+        }
+
+        function saveChecklistState() {
+            const checklistData = [];
+             checklistItems.forEach((section, sectionIndex) => {
+                const isExpanded = !document.getElementById(`section-items-${sectionIndex}`).classList.contains('hidden');
+                section.items.forEach((_, itemIndex) => {
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
+                     checklistData.push({
+                        checked: checkbox.checked,
+                        comment: commentInput.value,
+                        sectionIndex: sectionIndex,
+                        itemIndex: itemIndex,
+                        expanded: isExpanded,
+                    });
+                });
+            });
+            const date = dateInput.value;
+            const utilityName = utilityNameInput.value;
+
+            localStorage.setItem('shiftChecklist', JSON.stringify(checklistData));
+            localStorage.setItem('shiftChecklistDate', date);
+            localStorage.setItem('shiftChecklistName', utilityName);
+        }
+
+        // Event listener for input changes to save state
+        dateInput.addEventListener('change', saveChecklistState);
+        utilityNameInput.addEventListener('change', saveChecklistState);
+
+        // Save state on checkbox and comment changes
+        checklistContainer.addEventListener('change', (event) => {
+            if (event.target.type === 'checkbox' || event.target.tagName === 'TEXTAREA') {
+                saveChecklistState();
+            }
+        });
 
         generateChecklist();
 
