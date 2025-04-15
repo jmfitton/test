@@ -326,61 +326,16 @@
 
             const subject = "Shift Checklist";
 
-            let emailBody = `
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Shift Checklist</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-                </head>
-                <body style="font-family: 'Inter', sans-serif; color: #333; margin: 0; padding: 0;">
-                  <div style="max-width: 800px; margin: 20px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                    <h1 style="font-size: 24px; color: #2c3e50; margin-bottom: 20px; text-align: center;">Machine Utility</h1>
-                    <h2 style="font-size: 18px; color: #34495e; margin-bottom: 15px; text-align: center;">Shift Checklist & Operator Basic Care</h2>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 16px; font-weight: 500; color: #7f8c8d; margin-bottom: 5px;">Date:</label>
-                        <div style="">${date}</div>
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 16px; font-weight: 500; color: #7f8c8d; margin-bottom: 5px;">Utility Name:</label>
-                        <div style="">${utilityName}</div>
-                    </div>
-                    <table style="width: 100%; border-collapse: collapse;">
-            `;
+            let emailBody = `Machine Utility Shift Checklist\n\nDate: ${date}\nUtility Name: ${utilityName}\n\n`;
 
-          checklistData.forEach(item => {
-            emailBody += `
-                        <tr style="border-bottom: 1px solid #ecf0f1;">
-                            <td style="padding: 10px 0; font-size: 16px; color: #34495e; font-weight: bold;">${item.section}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #ecf0f1;">
-                            <td style="padding: 10px 0;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr style="border-bottom: 1px solid #ecf0f1;">
-                                        <td style="padding: 8px 0; width: 20px; height: 20px;">
-                                            <input type="checkbox" style="margin-right: 10px; width: 20px; height: 20px;" ${item.checked ? 'checked' : ''}>
-                                        </td>
-                                        <td style="padding: 8px 0; font-size: 16px; color: #2c3e50;">${item.item}</td>
-                                        <td style="padding: 8px 0; font-size: 14px; color: #333;">${item.comment}</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                `;
-          });
+            checklistData.forEach(item => {
+                emailBody += `${item.section}\n`;
+                emailBody += `${item.checked ? "[x]" : "[ ]"} ${item.item} - Comments: ${item.comment}\n`;
+            });
 
-          emailBody += `
-                    </table>
-                  </div>
-                </body>
-                </html>
-            `;
-
-          const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
-          window.location.href = mailtoUrl;
-          alert('Opening email client...  For best results, view in a desktop email client.');
+            const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+            window.location.href = mailtoUrl;
+            alert('Opening email client...  For best results, view in a desktop email client.');
         }
 
         function loadSavedChecklist() {
@@ -412,8 +367,8 @@
         function resetChecklist() {
             checklistItems.forEach((section, sectionIndex) => {
                 section.items.forEach((_, itemIndex) => {
-                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
-                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
                     if (checkbox) {
                         checkbox.checked = false;
                     }
