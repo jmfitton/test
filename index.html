@@ -403,7 +403,7 @@
 
             const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
             window.location.href = mailtoUrl;
-            alert('Opening email client...');
+            alert('Opening email client...  Some email clients may not display this with full formatting.');
         }
 
         function loadSavedChecklist() {
