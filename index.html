@@ -232,7 +232,6 @@
             // Add your custom items here, for example:
             // "Check the emergency exits are clear.",
             // "Verify all lights are working.",
-            // "Inspect fire extinguishers."
         ];
 
         const checklistContainer = document.getElementById('checklist-items');
@@ -287,15 +286,124 @@
             const utilityName = utilityNameInput.value;
 
             const subject = "Shift Checklist";
-            const body = `Date: ${date}\nUtility Name: ${utilityName}\n\nChecklist Data:\n${JSON.stringify(checklistData, null, 2)}`;
-            const recipient = recipientEmail; // Use the variable defined earlier
+            // const body = `Date: ${date}\nUtility Name: ${utilityName}\n\nChecklist Data:\n${JSON.stringify(checklistData, null, 2)}`;
+            // const recipient = recipientEmail; // Use the variable defined earlier
 
             // Use a mailto: link, which is the most reliable cross-platform way to open an email client.
-            const mailtoUrl = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            // const mailtoUrl = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-            window.location.href = mailtoUrl; // Open the user's default email client
+            // window.location.href = mailtoUrl; // Open the user's default email client
+            // alert('Opening email client...');
+
+            let emailBody = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Shift Checklist</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                      body {
+                        font-family: 'Inter', sans-serif;
+                        color: #333;
+                        margin: 0;
+                        padding: 0;
+                      }
+                      .container {
+                        max-width: 800px;
+                        margin: 20px auto;
+                        padding: 20px;
+                        background-color: #fff;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                      }
+                      h1 {
+                        font-size: 24px;
+                        color: #2c3e50;
+                        margin-bottom: 20px;
+                        text-align: center;
+                      }
+                      h2{
+                        font-size: 18px;
+                        color: #34495e;
+                        margin-bottom: 15px;
+                        text-align: center;
+                      }
+                      .form-field {
+                        margin-bottom: 15px;
+                      }
+                      .form-field label {
+                        display: block;
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: #7f8c8d;
+                        margin-bottom: 5px;
+                      }
+                      .checklist-item {
+                        display: flex;
+                        align-items: center;
+                        padding: 10px 0;
+                        border-bottom: 1px solid #ecf0f1;
+                      }
+                      .checklist-item:last-child {
+                        border-bottom: none;
+                      }
+                      .check-input {
+                        margin-right: 10px;
+                        width: 20px;
+                        height: 20px;
+                      }
+                      .item-text {
+                        flex-grow: 1;
+                        font-size: 16px;
+                        color: #2c3e50;
+                      }
+                      .comment-input {
+                        width: 100%;
+                        padding: 10px;
+                        margin-top: 5px;
+                        border-radius: 5px;
+                        border: 1px solid #bdc3c7;
+                        font-size: 14px;
+                      }
+                    </style>
+                </head>
+                <body>
+                  <div class="container">
+                    <h1>Machine Utility</h1>
+                    <h2>Shift Checklist & Operator Basic Care</h2>
+                    <div class="form-field">
+                        <label>Date:</label>
+                        <div>${date}</div>
+                    </div>
+                    <div class="form-field">
+                        <label>Utility Name:</label>
+                        <div>${utilityName}</div>
+                    </div>
+                    <div>
+            `;
+
+            checklistData.forEach(item => {
+                emailBody += `
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-input" ${item.checked ? 'checked' : ''}>
+                            <span class="item-text">${checklistItems[checklistData.indexOf(item)]}</span>
+                            <p>Comments: ${item.comment}</p>
+                        </div>
+                `;
+            });
+
+            emailBody += `
+                    </div>
+                  </div>
+                </body>
+                </html>
+            `;
+
+            const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+            window.location.href = mailtoUrl;
             alert('Opening email client...');
-
         }
 
         function loadSavedChecklist() {
