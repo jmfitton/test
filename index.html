@@ -93,6 +93,18 @@
       .checklist-items-container.expanded {
         display: block; /* Show when expanded */
       }
+      .email-button, .reset-button {
+        font-size: 18px; /* Increased font size */
+        margin: 0 auto; /* Center the buttons */
+        display: block;
+        width: 150px; /* Add a width if needed */
+        text-align: center;
+      }
+      .actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px; /* Add some space above the buttons */
+      }
     </style>
 </head>
 <body class="bg-gray-100"> <div class="mx-auto max-w-2xl bg-white rounded-lg shadow-md mt-8 mb-8 p-4"> <div class="title-container">
@@ -267,12 +279,6 @@
         //  CHANGE THIS EMAIL ADDRESS
         const recipientEmail = "mat.fitton@gmail.com";  // Replace with the desired email address
 
-        function titleCase(str) {
-          return str.toLowerCase().split(' ').map(function(word) {
-            return (word.charAt(0).toUpperCase() + word.slice(1));
-          }).join(' ');
-        }
-
         function generateChecklist() {
             checklistContainer.innerHTML = ''; // Clear previous checklist
             checklistItems.forEach((section, sectionIndex) => {
@@ -280,7 +286,7 @@
                 sectionDiv.className = 'checklist-section';
 
                 const sectionTitle = document.createElement('h2');
-                sectionTitle.textContent = titleCase(section.title); // Apply title case
+                sectionTitle.textContent = section.title;
                 sectionTitle.classList.add('collapsible-title'); // Add the collapsible-title class
                 sectionTitle.style.cssText = 'font-size: 18px; color: #34495e; margin-bottom: 10px; text-align: left; cursor: pointer; display: flex; align-items: center;'; // Removed justify-content
                 sectionTitle.addEventListener('click', toggleSection); // Add click event listener
