@@ -349,48 +349,46 @@
         }
 
         function sendChecklistByEmail() {
-          const checklistData = [];
-          checklistItems.forEach((section, sectionIndex) => {
-            const isExpanded = !document.getElementById(`section-items-${sectionIndex}`).classList.contains('hidden');
-            section.items.forEach((_, itemIndex) => {
-              const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
-              const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
-              checklistData.push({
-                checked: checkbox.checked,
-                comment: commentInput.value,
-                section: section.title, // Include section title
-                item: section.items[itemIndex],
-                expanded: isExpanded, // track expanded state
-              });
+            const checklistData = [];
+            checklistItems.forEach((section, sectionIndex) => {
+                const isExpanded = !document.getElementById(`section-items-${sectionIndex}`).classList.contains('hidden');
+                section.items.forEach((_, itemIndex) => {
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
+                    checklistData.push({
+                        checked: checkbox.checked,
+                        comment: commentInput.value,
+                        section: section.title, // Include section title
+                        item: section.items[itemIndex],
+                        expanded: isExpanded, //track expanded state
+                    });
+                });
             });
-          });
-          const date = dateInput.value;
-          const utilityName = utilityNameInput.value;
-          const shiftNumber = shiftNumberInput.value; // Get shift number
+            const date = dateInput.value;
+            const utilityName = utilityNameInput.value;
+            const shiftNumber = shiftNumberInput.value; // Get shift number
 
-          const subject = "Shift Checklist";
+            const subject = "Shift Checklist";
 
-          let emailBody = `Machine Utility Shift Checklist\n\nDate: ${date}\nUtility Name: ${utilityName}\nShift #: ${shiftNumber}\n\n`; // Include shift number
+            let emailBody = `Machine Utility Shift Checklist\n\nDate: ${date}\nUtility Name: ${utilityName}\nShift #: ${shiftNumber}\n\n`; // Include shift number
 
-          let previousSection = ""; // Keep track of the previous section
-          checklistData.forEach((item) => {
-            if (item.section !== previousSection) {
-              if (previousSection !== "") {
-                emailBody += `\n\n`; // Add 2 line breaks between sections
-              }
-              previousSection = item.section;
-            }
-            const commentText = item.comment.trim() ? `<b>${item.comment.trim()}</b>` : ''; // Bold the comment
-            emailBody += `${item.checked ? "[x]" : "[ ]"} ${item.item} - Comments: ${commentText}\n`;
-          });
+            let previousSection = ''; // Keep track of the previous section
+            checklistData.forEach(item => {
+                if (item.section !== previousSection) {
+                    if (previousSection !== '') {
+                        emailBody += `\n\n`; // Add 2 line breaks between sections
+                    }
+                    previousSection = item.section;
+                }
+                const itemText = item.comment.trim() ? `<b>${item.checked ? "[x]" : "[ ]"} ${item.item}</b>` : `${item.checked ? "[x]" : "[ ]"} ${item.item}`;
+                const commentText = item.comment.trim() ? ` - Comments: <b>${item.comment.trim()}</b>` : '';
+                emailBody += `${itemText}${commentText}\n`;
+            });
 
-          const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(
-            subject
-          )}&body=${encodeURIComponent(emailBody)}`;
-          window.location.href = mailtoUrl;
-          //alert('Opening email client...  For best results, view in a desktop email client.');
+            const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+            window.location.href = mailtoUrl;
+            alert('Opening email client...  For best results, view in a desktop email client.');
         }
-
 
         function loadSavedChecklist() {
             const savedChecklist = localStorage.getItem('shiftChecklist');
