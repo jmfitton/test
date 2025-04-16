@@ -518,7 +518,19 @@
             }
         });
 
-        generateChecklist();
+        // Attach event listeners to the buttons *after* they are added to the DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailButton = document.getElementById('email-button');
+            const resetButton = document.getElementById('reset-button');
+
+            if (emailButton) {
+                emailButton.addEventListener('click', sendChecklistByEmail);
+            }
+            if (resetButton) {
+                resetButton.addEventListener('click', resetChecklist);
+            }
+            generateChecklist();
+        });
 
     </script>
 </body>
