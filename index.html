@@ -84,6 +84,10 @@
         border: 1px solid #bdc3c7;
         font-size: 14px;
       }
+      .comment-input:focus {
+        font-size: 16px;  /* Make comments larger on focus */
+        font-weight: bold; /* Make comments bold on focus */
+      }
       .hidden {
         display: none;
       }
@@ -450,8 +454,8 @@
                 }
 
                 section.items.forEach((_, itemIndex) => {
-                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
-                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
                     if (checkbox) {
                         checkbox.checked = false;
                     }
