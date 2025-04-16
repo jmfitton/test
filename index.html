@@ -380,12 +380,11 @@
                     }
                     previousSection = item.section;
                 }
-                //  Add color to the entire line if there's a comment
                 const itemText = item.comment.trim()
-                    ? `<span style="color: red;">${item.checked ? "[x]" : "[ ]"} ${item.item}</span>`
+                    ? `<span style="background-color: yellow; font-weight: bold;">${item.checked ? "[x]" : "[ ]"} ${item.item}</span>`
                     : `${item.checked ? "[x]" : "[ ]"} ${item.item}`;
                 const commentText = item.comment.trim()
-                    ? ` - Comments: <span style="color: red;">${item.comment.trim()}</span>`
+                    ? ` - Comments: <span style="background-color: yellow; font-weight: bold;">${item.comment.trim()}</span>`
                     : '';
                 emailBody += `${itemText}${commentText}\n`;
             });
