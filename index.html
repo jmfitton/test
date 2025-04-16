@@ -358,7 +358,6 @@
                     checklistData.push({
                         checked: checkbox.checked,
                         comment: commentInput.value,
-                        section: section.title, // Include section title
                         item: section.items[itemIndex],
                         expanded: isExpanded, //track expanded state
                     });
@@ -371,9 +370,12 @@
             const subject = "Shift Checklist";
 
             let emailBody = `Machine Utility Shift Checklist\n\nDate: ${date}\nUtility Name: ${utilityName}\nShift #: ${shiftNumber}\n\n`; // Include shift number
-
+            let currentSection = ''; // Keep track of the current section
             checklistData.forEach(item => {
-                emailBody += `${item.section} ${item.expanded ? '(Expanded)' : '(Collapsed)'}\n`;
+                if (currentSection !== item.section) {
+                    emailBody += `${item.section} ${item.expanded ? '(Expanded)' : '(Collapsed)'}\n`;
+                    currentSection = item.section; // Update the current section
+                }
                 emailBody += `${item.checked ? "[x]" : "[ ]"} ${item.item} - Comments: ${item.comment}\n`;
             });
 
@@ -444,8 +446,8 @@
                 }
 
                 section.items.forEach((_, itemIndex) => {
-                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
-                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
                     if (checkbox) {
                         checkbox.checked = false;
                     }
@@ -485,8 +487,8 @@
              checklistItems.forEach((section, sectionIndex) => {
                 const isExpanded = !document.getElementById(`section-items-${sectionIndex}`).classList.contains('hidden');
                 section.items.forEach((_, itemIndex) => {
-                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
-                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
                      checklistData.push({
                         checked: checkbox.checked,
                         comment: commentInput.value,
