@@ -353,8 +353,8 @@
             checklistItems.forEach((section, sectionIndex) => {
                 const isExpanded = !document.getElementById(`section-items-${sectionIndex}`).classList.contains('hidden');
                 section.items.forEach((_, itemIndex) => {
-                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
-                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
                     checklistData.push({
                         checked: checkbox.checked,
                         comment: commentInput.value,
@@ -392,7 +392,7 @@
             const savedChecklist = localStorage.getItem('shiftChecklist');
             const savedDate = localStorage.getItem('shiftChecklistDate');
             const savedName = localStorage.getItem('shiftChecklistName');
-            const savedShift = localStorage.getItem('shiftChecklistShift'); // Load saved shift
+             const savedShift = localStorage.getItem('shiftChecklistShift'); // Load saved shift
 
             if (savedChecklist) {
                 const checklistData = JSON.parse(savedChecklist);
@@ -433,7 +433,7 @@
                 utilityNameInput.value = savedName;
             }
             if (savedShift) {
-                shiftNumberInput.value = savedShift; // Set shift number
+                shiftNumberInput.value = savedShift; // set the shift number
             }
         }
 
@@ -443,12 +443,11 @@
                 if (sectionItems) {
                     sectionItems.classList.add('hidden');
                     sectionItems.classList.remove('expanded');
-                    const sectionTitle = sectionItems.previousElementSibling;
+                     const sectionTitle = sectionItems.previousElementSibling;
                      if(sectionTitle){
                          sectionTitle.classList.remove('expanded');
                      }
                 }
-
                 section.items.forEach((_, itemIndex) => {
                     const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
                     const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
@@ -462,11 +461,11 @@
             });
             dateInput.value = '';
             utilityNameInput.value = '';
-            shiftNumberInput.value = ''; // Clear shift number
+            shiftNumberInput.value = ''; // Clear shift number input field
             localStorage.removeItem('shiftChecklist');
             localStorage.removeItem('shiftChecklistDate');
             localStorage.removeItem('shiftChecklistName');
-            localStorage.removeItem('shiftChecklistShift'); // Remove saved shift
+             localStorage.removeItem('shiftChecklistShift'); // remove shift number from local storage
             alert('Checklist reset!');
         }
 
@@ -486,14 +485,14 @@
             saveChecklistState();
         }
 
-        function saveChecklistState() {
+       function saveChecklistState() {
             const checklistData = [];
-             checklistItems.forEach((section, sectionIndex) => {
+            checklistItems.forEach((section, sectionIndex) => {
                 const isExpanded = !document.getElementById(`section-items-${sectionIndex}`).classList.contains('hidden');
                 section.items.forEach((_, itemIndex) => {
                     const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
                     const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
-                     checklistData.push({
+                    checklistData.push({
                         checked: checkbox.checked,
                         comment: commentInput.value,
                         sectionIndex: sectionIndex,
@@ -504,18 +503,17 @@
             });
             const date = dateInput.value;
             const utilityName = utilityNameInput.value;
-            const shiftNumber = shiftNumberInput.value; // Save shift number
-
+            const shiftNumber = shiftNumberInput.value; // save shift number
             localStorage.setItem('shiftChecklist', JSON.stringify(checklistData));
             localStorage.setItem('shiftChecklistDate', date);
             localStorage.setItem('shiftChecklistName', utilityName);
-            localStorage.setItem('shiftChecklistShift', shiftNumber); // Save shift number
+            localStorage.setItem('shiftChecklistShift', shiftNumber); // save shift number
         }
 
         // Event listener for input changes to save state
         dateInput.addEventListener('change', saveChecklistState);
         utilityNameInput.addEventListener('change', saveChecklistState);
-        shiftNumberInput.addEventListener('change', saveChecklistState); // Save on shift input change
+        shiftNumberInput.addEventListener('change', saveChecklistState); // event listener for shift number input
 
         // Save state on checkbox and comment changes
         checklistContainer.addEventListener('change', (event) => {
