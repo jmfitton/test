@@ -353,8 +353,8 @@
             checklistItems.forEach((section, sectionIndex) => {
                 const isExpanded = !document.getElementById(`section-items-${sectionIndex}`).classList.contains('hidden');
                 section.items.forEach((_, itemIndex) => {
-                    const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
-                    const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
                     checklistData.push({
                         checked: checkbox.checked,
                         comment: commentInput.value,
@@ -380,9 +380,7 @@
                     }
                     previousSection = item.section;
                 }
-                const itemText = `${item.checked ? "[x]" : "[ ]"} ${item.item}`;
-                const commentText = item.comment.trim() ? ` - Comments: ${item.comment.trim()}` : '';
-                emailBody += `${itemText}${commentText}\n`;
+                emailBody += `${item.checked ? "[x]" : "[ ]"} ${item.item} - Comments: ${item.comment}\n`;
             });
 
             const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
