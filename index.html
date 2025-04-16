@@ -83,11 +83,19 @@
         border-radius: 5px;
         border: 1px solid #bdc3c7;
         font-size: 14px;
+        font-weight: normal; /* Default font weight */
       }
       .comment-input:focus {
-        font-size: 16px;  /* Make comments larger on focus */
-        font-weight: bold; /* Make comments bold on focus */
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
       }
+      /* Ensure the bold and larger font size is applied even after focus is lost */
+      .comment-input.active {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
       .hidden {
         display: none;
       }
@@ -335,6 +343,13 @@
                     commentInput.placeholder = 'Comments...';
                     commentInput.id = `comment-${sectionIndex}-${itemIndex}`;
                     commentInput.style.cssText = 'width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #bdc3c7; font-size: 14px;';
+                    // Add event listener to apply 'active' class on focus and remove on blur
+                    commentInput.addEventListener('focus', () => {
+                        commentInput.classList.add('active');
+                    });
+                    commentInput.addEventListener('blur', () => {
+                        commentInput.classList.remove('active');
+                    });
 
                     checkboxCell.appendChild(checkbox);
                     labelCell.appendChild(label);
@@ -427,6 +442,10 @@
                     }
                     if (commentInput) {
                         commentInput.value = item.comment;
+                        // Apply the 'active' class if there is saved comment text
+                        if (item.comment) {
+                            commentInput.classList.add('active');
+                        }
                     }
                 });
             }
@@ -454,13 +473,14 @@
                 }
 
                 section.items.forEach((_, itemIndex) => {
-                    const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
-                    const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
                     if (checkbox) {
                         checkbox.checked = false;
                     }
                     if (commentInput) {
                         commentInput.value = '';
+                        commentInput.classList.remove('active'); // Remove the 'active' class on reset
                     }
                 });
             });
