@@ -380,8 +380,13 @@
                     }
                     previousSection = item.section;
                 }
-                const itemText = item.comment.trim() ? `<b>${item.checked ? "[x]" : "[ ]"} ${item.item}</b>` : `${item.checked ? "[x]" : "[ ]"} ${item.item}`;
-                const commentText = item.comment.trim() ? ` - Comments: <b>${item.comment.trim()}</b>` : '';
+                //  Add color to the entire line if there's a comment
+                const itemText = item.comment.trim()
+                    ? `<span style="color: red;">${item.checked ? "[x]" : "[ ]"} ${item.item}</span>`
+                    : `${item.checked ? "[x]" : "[ ]"} ${item.item}`;
+                const commentText = item.comment.trim()
+                    ? ` - Comments: <span style="color: red;">${item.comment.trim()}</span>`
+                    : '';
                 emailBody += `${itemText}${commentText}\n`;
             });
 
