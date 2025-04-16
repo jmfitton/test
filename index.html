@@ -392,7 +392,7 @@
             const savedChecklist = localStorage.getItem('shiftChecklist');
             const savedDate = localStorage.getItem('shiftChecklistDate');
             const savedName = localStorage.getItem('shiftChecklistName');
-             const savedShift = localStorage.getItem('shiftChecklistShift'); // Load saved shift
+            const savedShift = localStorage.getItem('shiftChecklistShift'); // Load saved shift
 
             if (savedChecklist) {
                 const checklistData = JSON.parse(savedChecklist);
@@ -433,7 +433,7 @@
                 utilityNameInput.value = savedName;
             }
             if (savedShift) {
-                shiftNumberInput.value = savedShift; // set the shift number
+                shiftNumberInput.value = savedShift; // Set shift number
             }
         }
 
@@ -443,7 +443,7 @@
                 if (sectionItems) {
                     sectionItems.classList.add('hidden');
                     sectionItems.classList.remove('expanded');
-                     const sectionTitle = sectionItems.previousElementSibling;
+                    const sectionTitle = sectionItems.previousElementSibling;
                      if(sectionTitle){
                          sectionTitle.classList.remove('expanded');
                      }
@@ -465,7 +465,8 @@
             localStorage.removeItem('shiftChecklist');
             localStorage.removeItem('shiftChecklistDate');
             localStorage.removeItem('shiftChecklistName');
-             localStorage.removeItem('shiftChecklistShift'); // remove shift number from local storage
+            localStorage.removeItem('shiftChecklistShift'); // Remove shift number from local storage
+            generateChecklist(); // re-generate the checklist
             alert('Checklist reset!');
         }
 
