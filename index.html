@@ -450,8 +450,8 @@
                 }
 
                 section.items.forEach((_, itemIndex) => {
-                    const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
-                    const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
+                    const checkbox = document.getElementById(`item-${sectionIndex}-${itemIndex}`);
+                    const commentInput = document.getElementById(`comment-${sectionIndex}-${itemIndex}`);
                     if (checkbox) {
                         checkbox.checked = false;
                     }
@@ -462,11 +462,12 @@
             });
             dateInput.value = '';
             utilityNameInput.value = '';
-            shiftNumberInput.value = ''; // Clear shift number
+            shiftNumberInput.value = ''; // Clear shift number input field
             localStorage.removeItem('shiftChecklist');
             localStorage.removeItem('shiftChecklistDate');
             localStorage.removeItem('shiftChecklistName');
-            localStorage.removeItem('shiftChecklistShift'); // Remove saved shift
+            localStorage.removeItem('shiftChecklistShift'); // Remove shift number from local storage
+            generateChecklist(); // re-generate the checklist.  this is not strictly necessary
             alert('Checklist reset!');
         }
 
@@ -486,14 +487,14 @@
             saveChecklistState();
         }
 
-        function saveChecklistState() {
+       function saveChecklistState() {
             const checklistData = [];
-             checklistItems.forEach((section, sectionIndex) => {
+            checklistItems.forEach((section, sectionIndex) => {
                 const isExpanded = !document.getElementById(`section-items-${sectionIndex}`).classList.contains('hidden');
                 section.items.forEach((_, itemIndex) => {
                     const checkbox = document.getElementById(`item-${sectionIndex}-${item.itemIndex}`);
                     const commentInput = document.getElementById(`comment-${sectionIndex}-${item.itemIndex}`);
-                     checklistData.push({
+                    checklistData.push({
                         checked: checkbox.checked,
                         comment: commentInput.value,
                         sectionIndex: sectionIndex,
@@ -504,18 +505,17 @@
             });
             const date = dateInput.value;
             const utilityName = utilityNameInput.value;
-            const shiftNumber = shiftNumberInput.value; // Save shift number
-
+            const shiftNumber = shiftNumberInput.value; // save shift number
             localStorage.setItem('shiftChecklist', JSON.stringify(checklistData));
             localStorage.setItem('shiftChecklistDate', date);
             localStorage.setItem('shiftChecklistName', utilityName);
-            localStorage.setItem('shiftChecklistShift', shiftNumber); // Save shift number
+            localStorage.setItem('shiftChecklistShift', shiftNumber); // save shift number
         }
 
         // Event listener for input changes to save state
         dateInput.addEventListener('change', saveChecklistState);
         utilityNameInput.addEventListener('change', saveChecklistState);
-        shiftNumberInput.addEventListener('change', saveChecklistState); // Save on shift input change
+        shiftNumberInput.addEventListener('change', saveChecklistState); // event listener for shift number input
 
         // Save state on checkbox and comment changes
         checklistContainer.addEventListener('change', (event) => {
