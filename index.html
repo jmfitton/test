@@ -372,8 +372,14 @@
 
             let emailBody = `Machine Utility Shift Checklist\n\nDate: ${date}\nUtility Name: ${utilityName}\nShift #: ${shiftNumber}\n\n`; // Include shift number
 
+            let previousSection = ''; // Keep track of the previous section
             checklistData.forEach(item => {
-                emailBody += `${item.section}\n`; // Removed (Expanded)/(Collapsed)
+                if (item.section !== previousSection) {
+                    if (previousSection !== '') {
+                        emailBody += `\n\n`; // Add 2 line breaks between sections
+                    }
+                    previousSection = item.section;
+                }
                 emailBody += `${item.checked ? "[x]" : "[ ]"} ${item.item} - Comments: ${item.comment}\n`;
             });
 
